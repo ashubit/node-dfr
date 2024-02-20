@@ -12,6 +12,8 @@ exports.create = (req, res) => {
         // Create a Tutorial
         const tutorial = new Tutorial({
           title: req.body.title,
+          email: req.body.email,
+          password: req.body.password,
           description: req.body.description,
           published: req.body.published ? req.body.published : false
         });
@@ -76,7 +78,26 @@ exports.findAll = (req, res) => {
       });
   };
 
-// Find a single Tutorial with an id
+// Login Tutorial with an email and pwd
+exports.login = (req, res) => {
+  const password = req.body.password;
+  const email = req.body.email;
+  const condition = {email:email, password:password};
+
+  Tutorial.find(condition)
+    .then(data => {
+      if (!data)
+        res.status(404).send({ message: "Not found Tutorial with id " + id });
+      else res.send(data);
+    })
+    .catch(err => {
+      res
+        .status(500)
+        .send({ message: "Error retrieving Tutorial with id=" + id });
+    });
+};
+
+  // Find a single Tutorial with an id
 exports.findOne = (req, res) => {
     const id = req.params.id;
   
